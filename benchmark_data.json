@@ -1,0 +1,452 @@
+[
+  {
+    "id": 1,
+    "type": "mcq",
+    "question": "During a CTF, you obtain an RSA ciphertext c and a public key (N, e) with e=3. The plaintext is known to be a short ASCII flag (< 100 bytes) without padding. N is a 2048‑bit modulus. How can you most efficiently recover the plaintext?",
+    "options": [
+      "Use Wiener's attack because e is small",
+      "Apply Hastad's broadcast attack since multiple ciphertexts are available",
+      "Employ Coppersmith's short‑pad attack to recover m",
+      "Directly compute the integer cube root of c (∛c)"
+    ],
+    "correct_answer": "Directly compute the integer cube root of c (∛c)",
+    "explanation": "Because e=3 and the message is very small, m³ < N (no modular reduction occurred). Therefore m is exactly the integer cube root of c, which can be computed trivially."
+  },
+  {
+    "id": 2,
+    "type": "mcq",
+    "question": "You intercepted two ciphertexts C1 and C2, both encrypted with the same repeating‑key XOR. You have a known plaintext phrase 'flag{' that likely appears in one of them. Which technique would most simply recover the key at that location?",
+    "options": [
+      "Frequency analysis on C1 alone",
+      "Crib dragging by XORing C1⊕C2 and sliding the known phrase",
+      "Kasiski examination to find the key length",
+      "Differential cryptanalysis on the XOR operation"
+    ],
+    "correct_answer": "Crib dragging by XORing C1⊕C2 and sliding the known phrase",
+    "explanation": "C1⊕C2 = P1⊕P2. By sliding the crib 'flag{' through (C1⊕C2) and XORing, you can find where legible plaintext appears. This reveals fragments of the other plaintext and, combined with known plaintext, the key."
+  },
+  {
+    "id": 3,
+    "type": "mcq",
+    "question": "In a CTF, the same message m is encrypted with RSA using e=3 and sent to three different recipients with distinct moduli N1, N2, N3. You possess all three ciphertexts c1, c2, c3. Which attack recovers m?",
+    "options": [
+      "Wiener's attack because e is small",
+      "Common modulus attack",
+      "Chinese Remainder Theorem (CRT) to compute m³ mod (N1·N2·N3), then integer cube root",
+      "Boneh‑Durfee lattice attack"
+    ],
+    "correct_answer": "Chinese Remainder Theorem (CRT) to compute m³ mod (N1·N2·N3), then integer cube root",
+    "explanation": "Using CRT we find x ≡ c_i (mod N_i). Because m < each N_i, x = m³ < N₁·N₂·N₃. Taking the integer cube root yields the plaintext m."
+  },
+  {
+    "id": 4,
+    "type": "mcq",
+    "question": "You are given an RSA public key with a very large public exponent e ≈ N and a private exponent d generated to be very small (d < N^0.25/3). Which attack is most likely to recover the private exponent?",
+    "options": [
+      "Pollard's p−1 factorization",
+      "Wiener's attack using continued fractions",
+      "Fermat's factorization",
+      "Direct brute‑force of d"
+    ],
+    "correct_answer": "Wiener's attack using continued fractions",
+    "explanation": "Wiener showed that when d is small enough, the convergents of the continued fraction expansion of e/N will include k/d, from which d can be extracted."
+  },
+  {
+    "id": 5,
+    "type": "mcq",
+    "question": "You have a ciphertext encrypted with a repeating‑key XOR cipher. To determine the probable key length, you compute the normalized Hamming distance between blocks of the ciphertext for various candidate key lengths. The correct key length is expected to yield:",
+    "options": [
+      "The maximum normalized distance",
+      "A distance close to zero",
+      "The minimum normalized distance",
+      "A distance equal to the key length itself"
+    ],
+    "correct_answer": "The minimum normalized distance",
+    "explanation": "When the key length is correct, the XOR of two blocks reveals the underlying plaintext statistics, and the bit‑wise difference is typically smaller than for incorrect lengths. Thus the normalized Hamming distance is minimal at the true key length."
+  },
+  {
+    "id": 6,
+    "type": "mcq",
+    "question": "A legacy PHP application uses addslashes() on user input before inserting into a MySQL query. The database default character set is GBK. Is this sufficient to prevent SQL injection?",
+    "options": [
+      "Yes, addslashes escapes single quotes and backslashes",
+      "No, addslashes can be bypassed using multibyte character sequences (e.g., 0xbf27)",
+      "Yes, but only if magic_quotes_gpc is enabled",
+      "No, because addslashes does not escape double quotes"
+    ],
+    "correct_answer": "No, addslashes can be bypassed using multibyte character sequences (e.g., 0xbf27)",
+    "explanation": "In GBK, 0xbf is a valid lead byte. addslashes() turns a single quote 0x27 into 0x5c27. The sequence 0xbf5c27 is then interpreted as a single valid GBK character (縗), effectively consuming the backslash and leaving the quote raw, enabling injection."
+  },
+  {
+    "id": 7,
+    "type": "mcq",
+    "question": "A Python web application stores session data in a cookie as a Base64‑encoded pickle dump. The cookie also includes an HMAC‑SHA256 signature generated with a secret key, and the server verifies the signature before deserializing with pickle.loads(). Is this scheme safe against remote code execution via the cookie?",
+    "options": [
+      "Yes, because HMAC prevents tampering",
+      "No, pickle always executes arbitrary code regardless of signature",
+      "Yes, but only if the HMAC key is longer than 256 bits",
+      "No, because the signature does not encrypt the data"
+    ],
+    "correct_answer": "Yes, because HMAC prevents tampering",
+    "explanation": "The attacker cannot forge a valid HMAC for a malicious pickle payload without the secret key. Only data originally signed by the server will be deserialized, so no arbitrary code execution is possible through tampering with the cookie."
+  },
+  {
+    "id": 8,
+    "type": "mcq",
+    "question": "A web application encrypts user‑supplied data concatenated with a secret suffix using AES‑ECB and returns the ciphertext. You can repeatedly submit chosen plaintexts and observe the encrypted output. What attack allows recovering the secret suffix byte by byte?",
+    "options": [
+      "Padding oracle attack",
+      "Byte‑at‑a‑time ECB decryption by controlling the prefix length",
+      "CBC bit‑flipping attack",
+      "Meet‑in‑the‑middle attack"
+    ],
+    "correct_answer": "Byte‑at‑a‑time ECB decryption by controlling the prefix length",
+    "explanation": "By crafting inputs of increasing lengths, the attacker can align the unknown suffix such that only one unknown byte remains in a block. Then a dictionary of ciphertexts for all possible values of that byte is built and compared to the observed block."
+  },
+  {
+    "id": 9,
+    "type": "mcq",
+    "question": "In a 64‑bit binary exploitation challenge, you find a format string vulnerability in printf(user_input) and a later buffer overflow protected by a stack canary. What strategy allows bypassing the canary?",
+    "options": [
+      "Overwrite the canary with any value",
+      "Use the format string to leak the canary value, then overwrite it correctly in the overflow",
+      "Disable NX bit via ROP",
+      "Brute‑force the canary one byte at a time"
+    ],
+    "correct_answer": "Use the format string to leak the canary value, then overwrite it correctly in the overflow",
+    "explanation": "The format string can read the canary from the stack using e.g. %p or %x. Once the correct value is known, the subsequent overflow writes the identical canary back, thus preserving it while hijacking the return address."
+  },
+  {
+    "id": 10,
+    "type": "mcq",
+    "question": "A web app encrypts a cookie “user=guest” using AES‑128‑CBC but does not authenticate the ciphertext. You can control the IV sent with the ciphertext. How can you gain admin privileges?",
+    "options": [
+      "By padding oracle attack to decrypt the cookie",
+      "By flipping bits in the IV to change the first block plaintext to “user=admin”",
+      "By recovering the AES key via known‑plaintext",
+      "By tampering with the ciphertext length"
+    ],
+    "correct_answer": "By flipping bits in the IV to change the first block plaintext to “user=admin”",
+    "explanation": "In CBC, decrypted_block1 ⊕ IV = plaintext1. Altering a bit in the IV toggles the corresponding bit in the plaintext. By XORing the IV with “guest”⊕“admin”, the first block becomes “user=admin”."
+  },
+  {
+    "id": 11,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void log_request(char *method, char *path) {\n    char line[128];\n    strcpy(line, method);\n    strcat(line, \" \");\n    strcat(line, path);\n    fprintf(stdout, \"Request: %s\\n\", line);\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')",
+    "exploitation_path": "An attacker supplying a 'path' longer than the remaining space in the 128‑byte buffer 'line' causes strcat() to write past the buffer's end, overwriting the stack return address. A crafted payload with shellcode and a controlled return address leads to arbitrary code execution."
+  },
+  {
+    "id": 12,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void log_message(char *msg) {\n    syslog(LOG_INFO, msg);\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-134: Use of Externally-Controlled Format String",
+    "exploitation_path": "If 'msg' contains format specifiers (e.g., %x %x %n), syslog interprets them. An attacker can leak memory to defeat ASLR and use %n to write to arbitrary addresses, redirecting execution to shellcode."
+  },
+  {
+    "id": 13,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void allocate_records(int num) {\n    if (num < 0) return;\n    int *table = malloc(num * sizeof(int));\n    if (!table) return;\n    for (int i = 0; i < num; i++) {\n        table[i] = i;\n    }\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-190: Integer Overflow or Wraparound",
+    "exploitation_path": "On 32‑bit, supplying num = 0x40000001 makes num*sizeof(int) wrap to a small value (e.g., 4), allocating a tiny buffer. The loop then writes millions of entries beyond the heap chunk, corrupting adjacent memory and enabling control of function pointers."
+  },
+  {
+    "id": 14,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void copy_until_null(char *dest, char *src) {\n    int i = 0;\n    while (src[i] != '\\0') {\n        dest[i] = src[i];\n        i++;\n    }\n    dest[i] = '\\0';\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-193: Off-by-one Error",
+    "exploitation_path": "If 'dest' is a 64‑byte stack buffer and 'src' is 64 non‑null bytes followed by a null, the loop copies 64 bytes and then writes a null terminator at dest[64], overwriting the least significant byte of the saved frame pointer. This off‑by‑one can be used to pivot the stack and hijack execution."
+  },
+  {
+    "id": 15,
+    "type": "vulnerability_analysis",
+    "code_snippet": "char *g_buf;\nvoid init() { g_buf = malloc(128); }\nvoid cleanup() { free(g_buf); }   /* g_buf not set to NULL */\nvoid update(char *input) { strcpy(g_buf, input); }",
+    "language": "C",
+    "vulnerability_type": "CWE-416: Use After Free",
+    "exploitation_path": "After calling cleanup() the memory chunk is freed but g_buf remains dangling. If the chunk is reallocated for another object (e.g., a vtable pointer), the subsequent update() writes attacker‑controlled data into that reallocated memory. When the overwritten object is used, the attacker gains code execution."
+  },
+  {
+    "id": 16,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void parse_packet(char *pkt, int len) {\n    char *buf = malloc(256);\n    memcpy(buf, pkt, len);\n    process(buf);\n    free(buf);\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-122: Heap-based Buffer Overflow",
+    "exploitation_path": "If len > 256, memcpy writes past the allocated 256‑byte heap buffer, corrupting the metadata of the next chunk. An attacker can craft the overflow to overwrite the forward/backward pointers of a free chunk, achieving an arbitrary write when that chunk is unlinked from the free list."
+  },
+  {
+    "id": 17,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void ping_host(char *host) {\n    char cmd[256];\n    snprintf(cmd, sizeof(cmd), \"ping -c 1 %s\", host);\n    FILE *fp = popen(cmd, \"r\");\n    /* ... */\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-77: Command Injection",
+    "exploitation_path": "An attacker can supply host = \"127.0.0.1; cat /etc/passwd\". popen invokes the shell, which interprets the semicolon and executes the injected command, leading to arbitrary command execution."
+  },
+  {
+    "id": 18,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void serve_file(char *filename) {\n    char fullpath[256];\n    snprintf(fullpath, sizeof(fullpath), \"/var/www/html/%s\", filename);\n    FILE *f = fopen(fullpath, \"r\");\n    /* ... */\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+    "exploitation_path": "By providing filename = \"../../../etc/shadow\", the constructed path escapes the document root and opens the shadow password file, leaking hashed credentials to the attacker."
+  },
+  {
+    "id": 19,
+    "type": "vulnerability_analysis",
+    "code_snippet": "int values[100];\nvoid set_value(int idx, int val) {\n    if (idx < 100) {\n        values[idx] = val;\n    }\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-129: Improper Validation of Array Index",
+    "exploitation_path": "A negative idx, e.g., -10, passes the check and writes before the beginning of the array. This can overwrite adjacent stack data such as other local variables or the saved return address, leading to control flow hijacking."
+  },
+  {
+    "id": 20,
+    "type": "vulnerability_analysis",
+    "code_snippet": "int open_file_safe(char *path) {\n    if (access(path, R_OK) != 0) {\n        return -1;\n    }\n    int fd = open(path, O_RDONLY);\n    return fd;\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition",
+    "exploitation_path": "After the access() call succeeds, an attacker can replace the file with a symbolic link to a protected file (e.g., /etc/shadow). When open() follows the symlink, the attacker gains access to the sensitive file despite the permission check."
+  },
+  {
+    "id": 21,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void read_username(char *buffer) {\n    scanf(\"%s\", buffer);\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-120: Buffer Copy without Checking Size of Input",
+    "exploitation_path": "If 'buffer' points to a small stack array, an input longer than the array size will overflow the buffer, overwriting the stack frame including the return address. A typical stack buffer overflow exploit results in remote code execution."
+  },
+  {
+    "id": 22,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void handle_data(int count) {\n    int *arr = alloca(count * sizeof(int));\n    for (int i = 0; i < count; i++) arr[i] = i;\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-789: Memory Allocation with Excessive Size Value ('Stack Exhaustion')",
+    "exploitation_path": "A large 'count' (e.g., 1,000,000) causes alloca to extend the stack far beyond its limit, crashing the program. In certain environments, this stack extension can overwrite thread metadata or guard pages in a controlled manner, potentially leading to code execution."
+  },
+  {
+    "id": 23,
+    "type": "vulnerability_analysis",
+    "code_snippet": "char *buf;\nvoid alloc() { buf = malloc(1024); }\nvoid free1() { free(buf); }\nvoid free2() { free(buf); }",
+    "language": "C",
+    "vulnerability_type": "CWE-415: Double Free",
+    "exploitation_path": "After alloc(), calling free1() and then free2() frees the same pointer twice. This puts the chunk into a fastbin list twice, so a subsequent malloc may return the same memory twice. An attacker can write to one of the aliased allocations to corrupt heap metadata and achieve arbitrary write."
+  },
+  {
+    "id": 24,
+    "type": "vulnerability_analysis",
+    "code_snippet": "char *clone_string(char *src) {\n    char *dst = malloc(strlen(src));\n    strcpy(dst, src);\n    return dst;\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-131: Incorrect Calculation of Buffer Size",
+    "exploitation_path": "strlen(src) returns the length without the null terminator. malloc allocates exactly that many bytes, but strcpy appends the null byte past the allocated region. This off‑by‑one heap overflow corrupts the next chunk's metadata, and with careful heap grooming can lead to arbitrary code execution."
+  },
+  {
+    "id": 25,
+    "type": "vulnerability_analysis",
+    "code_snippet": "void login() {\n    char username[32];\n    puts(\"Enter username:\");\n    gets(username);\n    /* ... */\n}",
+    "language": "C",
+    "vulnerability_type": "CWE-242: Use of Inherently Dangerous Function ('gets')",
+    "exploitation_path": "The gets() function does not perform bounds checking. By providing more than 32 characters, the attacker overwrites the stack frame. A carefully crafted payload can overwrite the return address to redirect execution to injected shellcode or a ROP chain."
+  },
+  {
+    "id": 26,
+    "type": "vulnerability_analysis",
+    "code_snippet": "$id = $_GET['id'];\n$result = mysql_query(\"SELECT name, email FROM users WHERE id=$id\");",
+    "language": "PHP",
+    "vulnerability_type": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+    "exploitation_path": "An attacker can supply id=1 UNION SELECT username, password FROM admin_users-- . The unsanitized input is placed directly into the query, allowing the attacker to extract arbitrary data from the database."
+  },
+  {
+    "id": 27,
+    "type": "vulnerability_analysis",
+    "code_snippet": "$data = unserialize($_COOKIE['prefs']);",
+    "language": "PHP",
+    "vulnerability_type": "CWE-502: Deserialization of Untrusted Data",
+    "exploitation_path": "The attacker crafts a serialized object of an available PHP class that executes dangerous operations in __destruct() or __wakeup(). Setting the cookie to this serialized payload causes the server to instantiate the object and execute the attacker's chosen actions, often leading to remote code execution."
+  },
+  {
+    "id": 28,
+    "type": "vulnerability_analysis",
+    "code_snippet": "import jwt\n\ntoken = request.cookies.get('session')\npayload = jwt.decode(token, options={\"verify_signature\": False})\nif payload.get('is_admin'):\n    # grant admin access",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-287: Improper Authentication",
+    "exploitation_path": "Set the JWT header to {\"alg\": \"none\"} and the payload to {\"is_admin\": true}, then remove the signature. The server accepts the token because signature verification is disabled. The attacker gains administrator privileges."
+  },
+  {
+    "id": 29,
+    "type": "vulnerability_analysis",
+    "code_snippet": "import pickle, base64\n\ncookie = request.cookies.get('state')\nif cookie:\n    data = pickle.loads(base64.b64decode(cookie))",
+    "language": "Python",
+    "vulnerability_type": "CWE-502: Deserialization of Untrusted Data",
+    "exploitation_path": "The attacker encodes a malicious pickle payload that defines a class with __reduce__ calling os.system. The server deserializes the cookie and executes the attacker's command with the server's privileges."
+  },
+  {
+    "id": 30,
+    "type": "vulnerability_analysis",
+    "code_snippet": "import yaml\n\nwith open('config.yaml', 'r') as f:\n    config = yaml.load(f)",
+    "language": "Python",
+    "vulnerability_type": "CWE-502: Deserialization of Untrusted Data",
+    "exploitation_path": "An attacker uploads a YAML file containing !!python/object/apply:os.system ['cat /etc/passwd']. The default unsafe yaml.load() constructs and executes the specified Python object, achieving remote code execution."
+  },
+  {
+    "id": 31,
+    "type": "vulnerability_analysis",
+    "code_snippet": "from Crypto.Cipher import AES\n\ndef encrypt_data(data, key):\n    cipher = AES.new(key, AES.MODE_ECB)\n    return cipher.encrypt(pad(data, 16))",
+    "language": "Python",
+    "vulnerability_type": "CWE-327: Use of a Broken or Risky Cryptographic Algorithm (ECB mode)",
+    "exploitation_path": "Because ECB encrypts identical plaintext blocks into identical ciphertext blocks, an attacker can detect patterns and perform a byte‑at‑a‑time decryption attack. By injecting chosen plaintext before a secret suffix, each unknown byte can be brute‑forced until the entire secret is recovered."
+  },
+  {
+    "id": 32,
+    "type": "vulnerability_analysis",
+    "code_snippet": "import random, string\n\ndef generate_token():\n    return ''.join(random.choices(string.ascii_letters + string.digits, k=32))",
+    "language": "Python",
+    "vulnerability_type": "CWE-330: Use of Insufficiently Random Values",
+    "exploitation_path": "The random module uses the Mersenne Twister PRNG, which is not cryptographically secure. By observing a few consecutive tokens, an attacker can reconstruct the internal state and predict future tokens, such as password reset links, to take over accounts."
+  },
+  {
+    "id": 33,
+    "type": "vulnerability_analysis",
+    "code_snippet": "import hashlib\n\ndef store_password(username, password):\n    hash = hashlib.md5(password.encode()).hexdigest()\n    db.execute(\"INSERT INTO users (user, pass) VALUES (?, ?)\", (username, hash))",
+    "language": "Python",
+    "vulnerability_type": "CWE-327: Use of a Broken or Risky Cryptographic Algorithm (MD5 password hashing)",
+    "exploitation_path": "MD5 is fast and unsalted. An attacker with the password hashes can crack them rapidly using rainbow tables or GPU‑accelerated brute‑force. No salting allows instant hash comparison against precomputed tables."
+  },
+  {
+    "id": 34,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/debug')\ndef debug():\n    import os\n    return jsonify(os.environ)",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
+    "exploitation_path": "The /debug endpoint exposes all environment variables, including secret keys, database passwords, and API tokens. An unauthenticated attacker can retrieve these and compromise the entire application."
+  },
+  {
+    "id": 35,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/fetch')\ndef fetch():\n    url = request.args.get('url')\n    resp = requests.get(url)\n    return resp.text",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-918: Server-Side Request Forgery (SSRF)",
+    "exploitation_path": "An attacker provides url=http://169.254.169.254/latest/meta-data/ to access the cloud metadata service, leaking IAM credentials. Internal services can also be scanned and exploited via the server's outgoing connection."
+  },
+  {
+    "id": 36,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/redirect')\ndef redir():\n    next = request.args.get('next', '/')\n    return redirect(next)",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')",
+    "exploitation_path": "The attacker crafts a link https://victim.com/redirect?next=http://evil.com. When a user clicks it, the server issues a 302 redirect to the attacker‑controlled site, which can be used for phishing or to leak tokens in the Referer header."
+  },
+  {
+    "id": 37,
+    "type": "vulnerability_analysis",
+    "code_snippet": "from markupsafe import Markup\n\n@app.route('/greet')\ndef greet():\n    name = request.args.get('name', '')\n    return f\"<h1>Hello {Markup(name)}</h1>\"",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+    "exploitation_path": "Markup marks the string as safe, disabling Jinja2's automatic escaping. An attacker supplies name=<script>alert(document.cookie)</script>, which is rendered as raw HTML and executes JavaScript in the victim's browser."
+  },
+  {
+    "id": 38,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/calculate')\ndef calc():\n    expr = request.args.get('expr')\n    result = eval(expr)\n    return str(result)",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-94: Improper Control of Generation of Code ('Code Injection')",
+    "exploitation_path": "The attacker provides expr=__import__('os').system('id'), which is evaluated directly. This results in arbitrary command execution with the privileges of the web server process."
+  },
+  {
+    "id": 39,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/ping')\ndef ping():\n    ip = request.args.get('ip')\n    os.system(f\"ping -c 1 {ip}\")\n    return \"pinging...\"",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+    "exploitation_path": "An attacker supplies ip=127.0.0.1; cat /etc/passwd. The shell interprets the semicolon and executes both commands, leaking the password file."
+  },
+  {
+    "id": 40,
+    "type": "vulnerability_analysis",
+    "code_snippet": "import xml.dom.pulldom as pulldom\n\ndef parse_xml(data):\n    doc = pulldom.parseString(data)\n    # process doc...",
+    "language": "Python",
+    "vulnerability_type": "CWE-611: Improper Restriction of XML External Entity Reference ('XXE')",
+    "exploitation_path": "The attacker submits XML with an external entity definition: <!DOCTYPE foo [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]> and references &xxe; in the body. The parser resolves the entity and includes the file content, which is then returned to the attacker."
+  },
+  {
+    "id": 41,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/upload', methods=['POST'])\ndef upload():\n    f = request.files['file']\n    f.save(os.path.join('uploads', f.filename))\n    return 'ok'",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-434: Unrestricted Upload of File with Dangerous Type",
+    "exploitation_path": "The attacker uploads a file with a .py extension containing a web shell. If the uploads directory is served by the web server, accessing the uploaded file executes the Python code, giving the attacker remote code execution."
+  },
+  {
+    "id": 42,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/view')\ndef view():\n    filename = request.args.get('file')\n    with open(os.path.join('documents', filename)) as f:\n        return f.read()",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-22: Path Traversal",
+    "exploitation_path": "The attacker sets file=../app/secret.key. The path joins to documents/../app/secret.key, which resolves to app/secret.key outside the intended documents directory, exposing the application's secret key."
+  },
+  {
+    "id": 43,
+    "type": "vulnerability_analysis",
+    "code_snippet": "# Registration\nusername = request.form['username']\ndb.execute(\"INSERT INTO users (username) VALUES (?)\", (username,))\n\n# Admin log viewer (later, using string formatting)\nusername = row['username']\nresults = db.execute(\"SELECT * FROM activity WHERE username='%s'\" % username)",
+    "language": "Python (SQLite)",
+    "vulnerability_type": "CWE-89: SQL Injection (Second‑order)",
+    "exploitation_path": "The attacker registers with username = \"admin' OR '1'='1\". The first insert is parametrized and safe. Later, an admin log query uses string interpolation with that stored username, causing the injected condition to be evaluated and return all rows, leading to data leakage."
+  },
+  {
+    "id": 44,
+    "type": "vulnerability_analysis",
+    "code_snippet": "API_KEY = \"sk_test_FAKE_STRIPE_KEY_FOR_BENCHMARK\"\n\ndef make_request():\n    headers = {\"Authorization\": f\"Bearer {API_KEY}\"}\n    # ...",
+    "language": "Python",
+    "vulnerability_type": "CWE-798: Use of Hard-coded Credentials",
+    "exploitation_path": "Anyone who gains read access to the source code (e.g., via a misconfigured repository, directory listing, or insider threat) can extract the API key and abuse it to access paid services or sensitive data."
+  },
+  {
+    "id": 45,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/login', methods=['POST'])\ndef login():\n    user = request.form['user']\n    pwd = request.form['password']\n    logging.info(f\"Login attempt {user}:{pwd}\")\n    # ... authentication",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-312: Cleartext Storage of Sensitive Information",
+    "exploitation_path": "Plaintext passwords are written to the log. If log files become readable via a local file inclusion vulnerability or misconfiguration, an attacker can harvest valid credentials and compromise user accounts."
+  },
+  {
+    "id": 46,
+    "type": "vulnerability_analysis",
+    "code_snippet": "from cryptography.hazmat.primitives.asymmetric import rsa\nprivate_key = rsa.generate_private_key(public_exponent=65537, key_size=512)",
+    "language": "Python",
+    "vulnerability_type": "CWE-326: Inadequate Encryption Strength",
+    "exploitation_path": "A 512‑bit RSA key can be factored in a matter of hours using general number field sieve implementations (e.g., CADO‑NFS). The attacker can recover the private key, decrypt any intercepted messages, and forge digital signatures."
+  },
+  {
+    "id": 47,
+    "type": "vulnerability_analysis",
+    "code_snippet": "from Crypto.Cipher import DES\ncipher = DES.new(key, DES.MODE_ECB)\nct = cipher.encrypt(data)",
+    "language": "Python",
+    "vulnerability_type": "CWE-327: Use of a Broken or Risky Cryptographic Algorithm (DES)",
+    "exploitation_path": "DES uses a 56‑bit key that is vulnerable to brute‑force attacks. ECB mode additionally leaks plaintext patterns. An adversary can crack the key offline or mount known‑plaintext attacks to recover the plaintext."
+  },
+  {
+    "id": 48,
+    "type": "vulnerability_analysis",
+    "code_snippet": "resp = make_response(redirect('/'))\nresp.set_cookie('session', token, httponly=True, secure=False)",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attribute",
+    "exploitation_path": "If the site is also accessible over HTTP, an active man‑in‑the‑middle attacker can intercept the session cookie in plaintext and hijack the authenticated session. The missing 'Secure' flag allows the cookie to be sent over unencrypted connections."
+  },
+  {
+    "id": 49,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/hello')\ndef hello():\n    name = request.args.get('name')\n    return render_template_string('Hello ' + name)",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-94: Server‑Side Template Injection (SSTI)",
+    "exploitation_path": "User input is concatenated directly into a Jinja2 template string. An attacker can provide {{config.SECRET_KEY}} to leak the Flask secret key, or craft more advanced payloads to achieve arbitrary remote code execution using Jinja2's built‑in objects."
+  },
+  {
+    "id": 50,
+    "type": "vulnerability_analysis",
+    "code_snippet": "@app.route('/api/invoices/<int:invoice_id>')\ndef get_invoice(invoice_id):\n    inv = Invoice.query.get(invoice_id)\n    if inv:\n        return jsonify(inv.to_dict())\n    return 'Not found', 404",
+    "language": "Python (Flask)",
+    "vulnerability_type": "CWE-639: Authorization Bypass Through User‑Controlled Key (IDOR)",
+    "exploitation_path": "The endpoint retrieves an invoice by its ID without verifying whether the authenticated user owns that invoice. An attacker can iterate through invoice IDs and access other users' financial information."
+  }
+]
